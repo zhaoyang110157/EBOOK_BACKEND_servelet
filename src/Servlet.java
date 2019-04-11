@@ -1,4 +1,3 @@
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 @WebServlet(name = "Servlet")
 public class Servlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
     public Servlet() {
         super();
@@ -58,6 +58,7 @@ public class Servlet extends HttpServlet {
         out.println("</table>\n</body></html>");
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+
+
     }
 }
