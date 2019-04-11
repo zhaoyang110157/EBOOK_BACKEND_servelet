@@ -5,14 +5,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
+import java.sql.*;
 @WebServlet(name = "Servlet")
 public class Servlet extends HttpServlet {
-
+    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/ebook";
+    // 数据库的用户名与密码
+    static final String USER = "root";
+    static final String PASS = "110157";
     private static final long serialVersionUID = 1L;
     public Servlet() {
         super();
         // TODO Auto-generated constructor stub
+
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 设置响应内容类型
@@ -20,42 +25,49 @@ public class Servlet extends HttpServlet {
 
         PrintWriter out = response.getWriter();
         String title = "图书详情";
-        String docType =
-                "<!DOCTYPE html> \n";
-        out.println(docType +
-                "<html>\n" +
-                "<head><meta charset=\"utf-8\"><title>" + title + "</title></head>\n"+
-                "<body bgcolor=\"#f0f0f0\">\n" +
-                "<h1 align=\"center\">" + title + "</h1>\n" +
-                "<table width=\"100%\" border=\"1\" align=\"center\">\n" +
-                "<tr bgcolor=\"#949494\">\n" +
-                "<th>title</th><th>ISBN</th><th>writer</th><th>inventory</th><th>price</th><th>group</th>\n"+
-                "</tr>\n");
-        out.print("<tr><td>"+ "挪威的森林"+ "</td>\n");
-        out.println("<td> " + "9787532755387" + "</td>\n");
-        out.println("<td> " + " 村上春树 著，林少华 译" + "</td>\n");
-        out.println("<td> " + "10" + "</td>\n");
-        out.println("<td> " + "50" + "</td>\n");
-        out.println("<td> " + "literature" + "</td></tr>\n");
-        out.print("<tr><td>"+ "泥土之界"+ "</td>\n");
-        out.println("<td> " + "9787533955588" + "</td>\n");
-        out.println("<td> " + "[美] 希拉莉·乔顿 著 ； 房小然 译" + "</td>\n");
-        out.println("<td> " + "10" + "</td>\n");
-        out.println("<td> " + "50" + "</td>\n");
-        out.println("<td> " + "literature" + "</td></tr>\n");
-        out.print("<tr><td>"+ "哈佛管理学"+ "</td>\n");
-        out.println("<td> " + "9787511339065" + "</td>\n");
-        out.println("<td> " + " 杜晗" + "</td>\n");
-        out.println("<td> " + "10" + "</td>\n");
-        out.println("<td> " + "50" + "</td>\n");
-        out.println("<td> " + "science" + "</td></tr>\n");
-        out.print("<tr><td>"+ "哲思"+ "</td>\n");
-        out.println("<td> " + "1003-3483" + "</td>\n");
-        out.println("<td> " + "时代青年杂志社" + "</td>\n");
-        out.println("<td> " + "10" + "</td>\n");
-        out.println("<td> " + "50" + "</td>\n");
-        out.println("<td> " + "magazine" + "</td></tr>\n");
-        out.println("</table>\n</body></html>");
+
+        Connection conn = null;
+        Statement stmt = null;
+        // 注册 JDBC 驱动
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            stmt = conn.createStatement();
+            String sql;
+            sql = "SELECT title, image FROM book";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                // 通过字段检索
+                String ttitle = rs.getString("title");
+                String image = rs.getString("image");
+                // 输出数据
+                System.out.print(", 书籍名称: " + ttitle );
+                System.out.print(", 图片 URL: " + image);
+                System.out.print("\n");
+            }
+            // 完成后关闭
+            rs.close();
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            // 处理 JDBC 错误
+            se.printStackTrace();
+        }catch(Exception e){
+            // 处理 Class.forName 错误
+            e.printStackTrace();
+        }finally{
+            // 关闭资源
+            try{
+                if(stmt!=null) stmt.close();
+            }catch(SQLException se2){
+            }// 什么都不做
+            try{
+                if(conn!=null) conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+        System.out.println("Goodbye!");
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
