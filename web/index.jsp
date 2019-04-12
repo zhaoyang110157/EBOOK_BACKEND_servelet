@@ -18,7 +18,7 @@
     <br>
     <div>捧一本书，读在晨间午后</div>
     <br>
-    <form action="Servlet" method="POST">
+    <form action="Servlet" method="GET">
       <input type="submit" value="图书详情" />
     </form>
   </div>
