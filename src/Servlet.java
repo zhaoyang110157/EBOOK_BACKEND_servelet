@@ -18,6 +18,8 @@ public class Servlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 设置响应内容类型
         response.setCharacterEncoding("utf-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Cache-Control","no-cache");
         PrintWriter out = response.getWriter();
         String title = "图书详情";
         String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -76,7 +78,6 @@ public class Servlet extends HttpServlet {
                 se.printStackTrace();
             }
         }
-        System.out.println("Goodbye!");
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
