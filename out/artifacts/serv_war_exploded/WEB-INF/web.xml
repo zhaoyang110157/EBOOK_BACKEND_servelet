@@ -4,12 +4,29 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <servlet>
-        <servlet-name>FullServletDemo</servlet-name>
-        <servlet-class>Servlet</servlet-class>
+        <servlet-name>BooksServlet</servlet-name>
+        <servlet-class>Books</servlet-class>
     </servlet>
-
     <servlet-mapping>
-        <servlet-name>FullServletDemo</servlet-name>
-        <url-pattern>/Servlet</url-pattern>
+        <servlet-name>BooksServlet</servlet-name>
+        <url-pattern>/Books</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UsersServlet</servlet-name>
+        <servlet-class>Users</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsersServlet</servlet-name>
+        <url-pattern>/Users</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OrdersServlet</servlet-name>
+        <servlet-class>Orders</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrdersServlet</servlet-name>
+        <url-pattern>/Orders</url-pattern>
     </servlet-mapping>
 </web-app>

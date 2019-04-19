@@ -1,3 +1,5 @@
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -6,28 +8,27 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-@WebServlet(name = "Servlet")
-public class Servlet extends HttpServlet {
 
+@WebServlet(name = "Orders")
+public class Orders extends HttpServlet {
+    String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    String DB_URL = "jdbc:mysql://localhost:3306/ebook";
+    // 数据库的用户名与密码
+    String USER = "root";
+    String PASS = "110157";
     private static final long serialVersionUID = 1L;
-    public Servlet() {
+    public Orders() {
         super();
         // TODO Auto-generated constructor stub
 
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 设置响应内容类型
         response.setCharacterEncoding("utf-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Cache-Control","no-cache");
         PrintWriter out = response.getWriter();
-        String title = "图书详情";
-        String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-        String DB_URL = "jdbc:mysql://localhost:3306/ebook";
-        // 数据库的用户名与密码
-        String USER = "root";
-        String PASS = "110157";
-        Connection conn = null;
+
+        Connection conn  = null;
         Statement stmt = null;
         // 注册 JDBC 驱动
         try {
@@ -35,28 +36,22 @@ public class Servlet extends HttpServlet {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();
             String sql;
-            sql = "SELECT title, image FROM book";
+            sql = "SELECT * FROM orders";
             ResultSet rs = stmt.executeQuery(sql);
-            out.println("<!DOCTYPE html>\n");
-            out.println("<html>\n");
-            out.println("<head>"+"<meta charset=\"utf-8\"><title>" + "</title></head>\n");
-            out.println("</head>\n");
-            out.println("<body>");
-            out.println("<table>");
-            out.println("<tr>+ <th> 书籍名称</th> + <th> 图片</th> +</tr>");
+            JSONArray array = new JSONArray();
             while (rs.next()) {
                 // 通过字段检索
-                String ttitle = rs.getString("title");
-                String image = rs.getString("image");
-                // 输出数据
-                out.println("<tr>+<td>" + ttitle+"</td>" );
-                out.println("<td> " + image+"</td>+<tr>");
-                out.println("\n");
+                JSONObject tmp = new JSONObject();
+                tmp.put("account", rs.getString("account"));
+                tmp.put("title", rs.getString("title"));
+                tmp.put("sales", rs.getByte("sales"));
+                tmp.put("batch", rs.getString("batch"));
+                tmp.put("time", rs.getString("time"));
+                array.add(tmp);
             }
-            // 完成后关闭
-            out.println("</table>\n");
-            out.println("</body>\n");
-            out.println("</html>\n");
+            JSONObject resp = new JSONObject();
+            resp.put("orders", array);
+            out.print(resp);
             rs.close();
             stmt.close();
             conn.close();
@@ -79,8 +74,8 @@ public class Servlet extends HttpServlet {
             }
         }
     }
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 }
