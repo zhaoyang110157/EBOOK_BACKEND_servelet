@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 @WebServlet(name = "Books")
 public class Books extends HttpServlet {
     String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -78,7 +79,47 @@ public class Books extends HttpServlet {
         }
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String title="",writer="",image="",ISBN="";
+        int inventory=0;
+        float price=0;
+        String introduction="";
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Cache-Control","no-cache");
 
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            Class.forName(JDBC_DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            stmt = conn.createStatement();
+            String sql;
+            sql = "SELECT * FROM book";
+            ResultSet rs = stmt.executeQuery(sql);
 
-    }
-}
+            while (rs.next()) {
+
+            }
+            JSONObject resp = new JSONObject();
+            rs.close();
+            stmt.close();
+            conn.close();
+        }catch(SQLException se){
+            // 处理 JDBC 错误
+            se.printStackTrace();
+        }catch(Exception e){
+            // 处理 Class.forName 错误
+            e.printStackTrace();
+        }finally{
+            // 关闭资源
+            try{
+                if(stmt!=null) stmt.close();
+            }catch(SQLException se2){
+            }// 什么都不做
+            try{
+                if(conn!=null) conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+}}

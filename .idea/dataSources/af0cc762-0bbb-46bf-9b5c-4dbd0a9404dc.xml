@@ -1312,13 +1312,13 @@
     </view>
     <column id="347" parent="278" name="title">
       <Position>1</Position>
-      <DataType>varchar(10)|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="348" parent="278" name="image">
       <Position>2</Position>
-      <DataType>varchar(25)|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="349" parent="278" name="ISBN">
@@ -1328,7 +1328,7 @@
     </column>
     <column id="350" parent="278" name="writer">
       <Position>4</Position>
-      <DataType>varchar(20)|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="351" parent="278" name="price">
@@ -1363,7 +1363,7 @@
     </column>
     <column id="357" parent="279" name="title">
       <Position>2</Position>
-      <DataType>varchar(10)|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="358" parent="279" name="sales">
@@ -1403,18 +1403,18 @@
     </foreign-key>
     <column id="365" parent="280" name="account">
       <Position>1</Position>
-      <DataType>varchar(20)|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="366" parent="280" name="password">
       <Position>2</Position>
-      <DataType>varchar(20)|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <column id="367" parent="280" name="allowed">
       <Position>3</Position>
-      <DataType>tinyint(1)|0s</DataType>
+      <DataType>int(11)|0s</DataType>
       <DefaultExpression>1</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
