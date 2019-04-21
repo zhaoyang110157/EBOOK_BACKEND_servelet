@@ -1,0 +1,4 @@
+后端（Servlet）
+编写的过程中遇到的问题和解决办法
+1、sql 语句
+2、access-control-allow-origin 问题

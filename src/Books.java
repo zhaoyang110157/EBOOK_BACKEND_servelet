@@ -3,6 +3,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
@@ -11,7 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 
 @WebServlet(name = "Books")
 public class Books extends HttpServlet {
-    String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     String DB_URL = "jdbc:mysql://localhost:3306/ebook";
     // 数据库的用户名与密码
     String USER = "root";
@@ -37,7 +38,7 @@ public class Books extends HttpServlet {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();
             String sql;
-            sql = "SELECT * FROM book";
+            sql = "SELECT * FROM book ";
             ResultSet rs = stmt.executeQuery(sql);
             JSONArray array = new JSONArray();
             while (rs.next()) {
@@ -49,8 +50,8 @@ public class Books extends HttpServlet {
                 tmp.put("writer", rs.getString("writer"));
                 tmp.put("price", rs.getFloat("price"));
                 tmp.put("inventory", rs.getInt("inventory"));
-                tmp.put("group", rs.getString("tranch"));
-                tmp.put("intro", rs.getString("introduction"));
+                tmp.put("tranch", rs.getString("tranch"));
+                tmp.put("introduction", rs.getString("introduction"));
                 array.add(tmp);
             }
             JSONObject resp = new JSONObject();
@@ -79,47 +80,126 @@ public class Books extends HttpServlet {
         }
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String title="",writer="",image="",ISBN="";
-        int inventory=0;
-        float price=0;
-        String introduction="";
+
+        BufferedReader br = request.getReader();
+        String str, wholeStr = "";
+        while ((str = br.readLine()) != null) {
+            wholeStr += str;
+        }
+
+        //System.out.println(wholeStr);
+        JSONObject req = JSONObject.parseObject(wholeStr);
+        //System.out.println(req);
         response.setCharacterEncoding("utf-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Cache-Control","no-cache");
-
+        PrintWriter out = response.getWriter();
         Connection conn = null;
         Statement stmt = null;
-        try {
-            Class.forName(JDBC_DRIVER);
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            stmt = conn.createStatement();
-            String sql;
-            sql = "SELECT * FROM book";
-            ResultSet rs = stmt.executeQuery(sql);
+        String title="",writer="",image="",ISBN="",tranch = "";
+        int inventory=0,id=-1;
+        float price=0;
+        String introduction="";
+        int type = req.getInteger("type");
+       // id = req.getInteger("id");
+        //System.out.print(id);
+        title = req.getString("title");
+        //System.out.print(title);
+        image = req.getString("image");
+        //System.out.print(image);
+        ISBN = req.getString("ISBN");
+        //System.out.print(ISBN);
+        writer = req.getString("writer");
+        //System.out.print(writer);
+        price = req.getFloat("price");
+        //System.out.print(price);
+        inventory = req.getInteger("inventory");
+        //System.out.print(inventory);
+        tranch  = req.getString("tranch");
+        //System.out.print(tranch);
+        introduction = req.getString("introduction");
+        System.out.print(type);
+        if(type == 0)
+        {
+            try {
+                System.out.print(type);
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                stmt = conn.createStatement();
+                String sql;
+                sql = "UPDATE `book` SET title = '"+title+"',writer = '"+writer+"',price="+price+",inventory = "+inventory+",tranch = '"+tranch+"' ,introduction = '"+introduction+"' WHERE ISBN = " +
+                        "'"+ISBN+"'";
+                System.out.print(sql);
+                System.out.print("\n");
+                int rs = stmt.executeUpdate(sql);
 
-            while (rs.next()) {
-
-            }
-            JSONObject resp = new JSONObject();
-            rs.close();
-            stmt.close();
-            conn.close();
-        }catch(SQLException se){
-            // 处理 JDBC 错误
-            se.printStackTrace();
-        }catch(Exception e){
-            // 处理 Class.forName 错误
-            e.printStackTrace();
-        }finally{
-            // 关闭资源
-            try{
-                if(stmt!=null) stmt.close();
-            }catch(SQLException se2){
-            }// 什么都不做
-            try{
-                if(conn!=null) conn.close();
+                JSONObject resp = new JSONObject();
+                resp.put("message", "Update bookInf successfully!");
+                System.out.println(2);
+                System.out.println(1);
+                out.println(resp);
+                stmt.close();
+                conn.close();
             }catch(SQLException se){
+                // 处理 JDBC 错误
                 se.printStackTrace();
+            }catch(Exception e){
+                // 处理 Class.forName 错误
+                e.printStackTrace();
+            }finally{
+                // 关闭资源
+                try{
+                    if(stmt!=null) stmt.close();
+                }catch(SQLException se2){
+                }// 什么都不做
+                try{
+                    if(conn!=null) conn.close();
+                }catch(SQLException se){
+                    se.printStackTrace();
+                }
             }
+
         }
-}}
+        else{
+            try {
+                System.out.print(type);
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                stmt = conn.createStatement();
+                String sql;
+                sql = "INSERT INTO book(title,image,ISBN,writer,price,inventory,tranch,introduction) VALUES('"+title+"',null,'"+ISBN+"','"+writer+"','"+price+"','"+inventory+"','"+tranch+"', '"+introduction+"')";
+                System.out.print(sql);
+                System.out.print("\n");
+                int rs = stmt.executeUpdate(sql);
+
+                JSONObject resp = new JSONObject();
+                resp.put("message", "Update bookInf successfully!");
+                System.out.println(2);
+                System.out.println(1);
+                out.println(resp);
+                stmt.close();
+                conn.close();
+            }catch(SQLException se){
+                // 处理 JDBC 错误
+                se.printStackTrace();
+            }catch(Exception e){
+                // 处理 Class.forName 错误
+                e.printStackTrace();
+            }finally{
+                // 关闭资源
+                try{
+                    if(stmt!=null) stmt.close();
+                }catch(SQLException se2){
+                }// 什么都不做
+                try{
+                    if(conn!=null) conn.close();
+                }catch(SQLException se){
+                    se.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+}
+
