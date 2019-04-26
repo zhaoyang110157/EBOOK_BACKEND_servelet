@@ -94,8 +94,8 @@ public class Users extends HttpServlet {
         response.setHeader("Cache-Control", "no-cache");
         PrintWriter out = response.getWriter();
         System.out.println(2);
-        String type = req.getString("type");
-        if (type == "change") {
+        Integer type = req.getInteger("type");
+        if (type == 1) {
             String account = req.getString("account");
             System.out.println(account);
             int allowed = req.getInteger("allowed");
