@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.Enumeration;
 
 @WebServlet(name = "Orders")
 public class Orders extends HttpServlet {
@@ -29,6 +30,12 @@ public class Orders extends HttpServlet {
         response.setHeader("Cache-Control","no-cache");
         PrintWriter out = response.getWriter();
 
+            String account = request.getQueryString();
+        System.out.print(account);
+        System.out.print('\n');
+        int ass =  account.lastIndexOf("=");
+        account =  account.substring(ass+1);
+        System.out.print(account);
         Connection conn  = null;
         Statement stmt = null;
         // 注册 JDBC 驱动
@@ -37,19 +44,21 @@ public class Orders extends HttpServlet {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();
             String sql;
-            sql = "SELECT * FROM orders";
+            sql = "SELECT * FROM orders where account= '"+account+"'";
             ResultSet rs = stmt.executeQuery(sql);
             JSONArray array = new JSONArray();
             while (rs.next()) {
                 // 通过字段检索
                 JSONObject tmp = new JSONObject();
                 tmp.put("account", rs.getString("account"));
+                tmp.put("image", rs.getString("image"));
+                tmp.put("price", rs.getString("price"));
                 tmp.put("title", rs.getString("title"));
-                tmp.put("sales", rs.getByte("sales"));
-                tmp.put("batch", rs.getString("batch"));
+                tmp.put("inventory", rs.getByte("sales"));
                 tmp.put("time", rs.getString("time"));
                 array.add(tmp);
             }
+            System.out.print("ssssss");
             JSONObject resp = new JSONObject();
             resp.put("orders", array);
             out.print(resp);
@@ -90,16 +99,17 @@ public class Orders extends HttpServlet {
         response.setHeader("Cache-Control", "no-cache");
         PrintWriter out = response.getWriter();
         System.out.println(1);
+        PreparedStatement pst = null;
+        Connection conn = null;
+        Statement stmt = null;
+
         Integer type = req.getInteger("type");
         if (type == 0) {
             String title = req.getString("title");
             System.out.println(title);
             int buy = req.getInteger("inventory");
             System.out.print(buy);
-            PreparedStatement pst = null;
-            Connection conn = null;
-            Statement stmt = null;
-            // 注册 JDBC 驱动
+           // 注册 JDBC 驱动
             try {
                 Class.forName(JDBC_DRIVER);
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -146,11 +156,8 @@ public class Orders extends HttpServlet {
             String account = req.getString("account");
             int buy = req.getInteger("inventory");
             System.out.print(buy);
-
             int time = req.getInteger("time");
-            PreparedStatement pst = null;
-            Connection conn = null;
-            Statement stmt = null;
+
             // 注册 JDBC 驱动
             try {
                 Class.forName(JDBC_DRIVER);
@@ -158,13 +165,9 @@ public class Orders extends HttpServlet {
                 stmt = conn.createStatement();
                 String sql;
                 System.out.println(21);
-                sql = "SELECT inventory from `book` where title = '"+title+"'";
+                sql = "Insert INTO  orders(title,account.sales,time） values('"+title+"','"+account+"','"+buy+"',"+time+")";
                 System.out.println(22);
                 ResultSet rs = stmt.executeQuery(sql);
-                rs.next();
-                int inv = rs.getInt(1);
-                inv -= buy;
-                sql = "UPDATE `book` SET inventory = "+inv+" WHERE title = '" + title +"'";
                 System.out.println(31);
                 stmt.executeUpdate(sql);
                 JSONObject resp = new JSONObject();
