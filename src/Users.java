@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 @WebServlet(name = "Users")
 public class Users extends HttpServlet {
     String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    String DB_URL = "jdbc:mysql://localhost:3306/ebook";
+    String DB_URL = "jdbc:mysql://localhost:3306/ebook?characterEncoding=utf8&useSSL=false";
     // 数据库的用户名与密码
     String USER = "root";
     String PASS = "110157";
@@ -46,6 +46,7 @@ public class Users extends HttpServlet {
                 // 通过字段检索
                 JSONObject tmp = new JSONObject();
                 tmp.put("account", rs.getString("account"));
+                tmp.put("id", rs.getInt("id"));
                 System.out.print(rs.getString("account") + "/n");
                 tmp.put("password", rs.getString("password"));
                 tmp.put("allowed", rs.getByte("allowed"));
@@ -109,16 +110,11 @@ public class Users extends HttpServlet {
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 stmt = conn.createStatement();
                 String sql;
-                System.out.println(21);
                 sql = "UPDATE `users` SET `allowed`=" + allowed + " WHERE `account`='" + account + "'";
-                System.out.println(22);
                 int rs = stmt.executeUpdate(sql);
-                System.out.println(31);
                 JSONObject resp = new JSONObject();
                 resp.put("message", "Update validity successfully!");
-                System.out.println(2);
                 resp.put("target", allowed);
-                System.out.println(1);
                 out.println(resp);
                 stmt.close();
                 conn.close();
@@ -146,7 +142,7 @@ public class Users extends HttpServlet {
             String password = req.getString("password");
             String role = req.getString("role");
             int allowed = req.getInteger("allowed");
-            System.out.print(5);
+            int id = req.getInteger("id");
             PreparedStatement pst = null;
             Connection conn = null;
             Statement stmt = null;
@@ -156,16 +152,11 @@ public class Users extends HttpServlet {
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 stmt = conn.createStatement();
                 String sql;
-                System.out.println(6);
-                sql = "INSERT INTO  users(account, password, allowed, role) values( '" + account + "','" + password + "','" + allowed + "','" + role + "')";
-                System.out.println(7);
+                sql = "INSERT INTO  users(account,id, password, allowed, role) values( '" + account + "',"+id+"'," + password + "','" + allowed + "','" + role + "')";
                 int rs = stmt.executeUpdate(sql);
-                System.out.println(8);
                 JSONObject resp = new JSONObject();
                 resp.put("message", "Insert successfully!");
-                System.out.println(9);
                 resp.put("target", allowed);
-                System.out.println(0);
                 out.println(resp);
                 stmt.close();
                 conn.close();

@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 @WebServlet(name = "Books")
 public class Books extends HttpServlet {
     String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    String DB_URL = "jdbc:mysql://localhost:3306/ebook";
+    String DB_URL = "jdbc:mysql://localhost:3306/ebook?characterEncoding=utf8&useSSL=false";
     // 数据库的用户名与密码
     String USER = "root";
     String PASS = "110157";
@@ -45,6 +45,7 @@ public class Books extends HttpServlet {
                 // 通过字段检索
                 JSONObject tmp = new JSONObject();
                 tmp.put("title", rs.getString("title"));
+                tmp.put("bid",rs.getInt("bid"));
                 tmp.put("image", rs.getString("image"));
                 tmp.put("ISBN", rs.getString("ISBN"));
                 tmp.put("writer", rs.getString("writer"));
@@ -104,6 +105,7 @@ public class Books extends HttpServlet {
        // id = req.getInteger("id");
         //System.out.print(id);
         title = req.getString("title");
+        int bid = req.getInteger("bid");
         //System.out.print(title);
         image = req.getString("image");
         //System.out.print(image);
@@ -167,7 +169,7 @@ public class Books extends HttpServlet {
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 stmt = conn.createStatement();
                 String sql;
-                sql = "INSERT INTO book(title,image,ISBN,writer,price,inventory,tranch,introduction) VALUES('"+title+"',null,'"+ISBN+"','"+writer+"','"+price+"','"+inventory+"','"+tranch+"', '"+introduction+"')";
+                sql = "INSERT INTO book(title,bid,image,ISBN,writer,price,inventory,tranch,introduction) VALUES('"+title+"',"+bid+",null,'"+ISBN+"','"+writer+"','"+price+"','"+inventory+"','"+tranch+"', '"+introduction+"')";
                 System.out.print(sql);
                 System.out.print("\n");
                 int rs = stmt.executeUpdate(sql);
