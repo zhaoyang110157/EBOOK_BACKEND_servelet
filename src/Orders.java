@@ -26,12 +26,10 @@ public class Orders extends HttpServlet {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Cache-Control","no-cache");
         PrintWriter out = response.getWriter();
-
-            String account = request.getQueryString();
+        String account = request.getQueryString();
         int ass =  account.lastIndexOf("=");
         account =  account.substring(ass+1);
         int id = Integer.parseInt(account);
-        System.out.print(account);
         Connection conn  = null;
         Statement stmt = null;
         // 注册 JDBC 驱动
@@ -50,7 +48,9 @@ public class Orders extends HttpServlet {
                 tmp.put("price", rs.getString("price"));
                 tmp.put("bid", rs.getString("bid"));
                 tmp.put("inventory", rs.getByte("sales"));
-                tmp.put("time", rs.getDate("time"));
+                tmp.put("time", rs.getString("time"));
+                System.out.print( rs.getString("time"));
+                System.out.print('\n');
                 array.add(tmp);
             }
             JSONObject resp = new JSONObject();

@@ -152,7 +152,7 @@ public class Users extends HttpServlet {
                 conn = DriverManager.getConnection(DB_URL, USER, PASS);
                 stmt = conn.createStatement();
                 String sql;
-                sql = "INSERT INTO  users(account,id, password, allowed, role) values( '" + account + "',"+id+"'," + password + "','" + allowed + "','" + role + "')";
+                sql = "INSERT INTO  users(account,id, password, allowed, role) values( '" + account + "',"+id+",'" + password + "','" + allowed + "','" + role + "')";
                 int rs = stmt.executeUpdate(sql);
                 JSONObject resp = new JSONObject();
                 resp.put("message", "Insert successfully!");
