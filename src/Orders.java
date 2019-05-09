@@ -32,7 +32,7 @@ public class Orders extends HttpServlet {
         int id = Integer.parseInt(account);
         Connection conn  = null;
         Statement stmt = null;
-        // 注册 JDBC 驱动
+        // 注册 JDBC 驱动J
         try {
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
